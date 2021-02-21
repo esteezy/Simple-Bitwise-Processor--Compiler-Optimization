@@ -1,7 +1,7 @@
 # Simple-Bitwise-Processor--Compiler-Optimization
 Simple language for bitwise processing using a lexer (Flex) and parser (Bison). Specifically generating LLVM IR code for basic code.
 
-E.g. (test_7.p1)
+E.g. (test_7.p1)\
 ======================================== Source Code input ========================================\
 in a\
 b = a * a - a\
