@@ -3,9 +3,9 @@ Simple language for bitwise processing using a lexer (Flex) and parser (Bison). 
 
 E.g. (test_7.p1)
 ======================================== Source Code input ========================================
-in a
+''in a
 b = a*a - a
-final b12,b11,b10,b9,b8,b7,b6,b5
+final b12,b11,b10,b9,b8,b7,b6,b5''
 
 ======================================== LLVM IR Representation ========================================
 ; ModuleID = 'test_7'
