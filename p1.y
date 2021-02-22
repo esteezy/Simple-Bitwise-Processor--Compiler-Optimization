@@ -254,18 +254,11 @@ expr:   ID                                                  // Identifier
 }
 |       INV expr                                            // Flips all 32 bits in expr (e.g. y=0; ~y becomes -1)
 {
-    Value *bit_mask = Builder.getInt32(1);
-    Value *temp_result = Builder.getInt32(0);
+    Value * result = $2;
     for(int i = 0; i<32; i++){
-        Value *result = Builder.CreateAnd(bit_mask, $2);
-        //determine if bit is 0 or 1
-        Value *icmp = Builder.CreateICmpEQ(result, Builder.getInt32(1));
-        Value *temp = Builder.CreateAdd(temp_result, (Builder.CreateSelect(icmp,Builder.CreateSub($2, bit_mask),
-                        Builder.CreateAdd($2, bit_mask))));
-        temp_result = temp;
-        bit_mask =  Builder.CreateShl(bit_mask, 1);
+        result = Builder.CreateXor(result, (Builder.CreateShl(Builder.getInt32(1), i)));
     }
-    $$ = temp_result;
+    $$ = result;
 }
 |       BINV expr                                           // Invert LSB of expr
 {
@@ -301,7 +294,11 @@ expr:   ID                                                  // Identifier
         YYABORT;
     }
     //trying to access index out of bounds
-    if(Builder.CreateICmpSGT($3, Builder.getInt32(31)) || Builder.CreateICmpSLT($3, Builder.getInt32(0))){
+    Value *gt_check = Builder.CreateICmpSGT($3, Builder.getInt32(31));
+    Value *lt_check = Builder.CreateICmpSLT($3, Builder.getInt32(0));
+    Value *check1 = Builder.CreateZExt(gt_check, Builder.getInt32Ty());
+    Value *check2 = Builder.CreateZExt(lt_check, Builder.getInt32Ty());
+    if(check1 == Builder.getInt32(1) || check2 == Builder.getInt32(1)){
         printf("Bit index out of bounds\n");
         YYABORT;
     }
